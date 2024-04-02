@@ -1,37 +1,40 @@
-name: Cypress Tests with JSON Cache
+name: Cypress Workflow with Caching
 
-on: [push]
+on:
+  push:
 
 jobs:
-  cypress-tests:
-    runs-on: ubuntu-latest
+  cypress_tests:
+    runs-on: ubuntu-latest # Or your preferred OS
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Cache previous run JSON
-        id: cache-previous-run
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18 # Example version, adjust as needed
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Cache the 'previousRun.json' (if it exists)
+      - name: Retrieve previousRun.json from cache
         uses: actions/cache@v3
         with:
           path: ./previousRun.json
-          key: ${{ runner.os }}-previousRun-${{ hashFiles('./previousRun.json') }}
+          key: ${{ runner.os }}-previous-run-${{ hashFiles('package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-previousRun-
+            ${{ runner.os }}-previous-run-
 
-      - name: Cypress run with cached JSON
-        uses: cypress-io/github-action@v4
-        with:
-          # Adjust the start and wait-on commands as needed for your project
-          start: npm start
-          wait-on: "http://localhost:3000"
-          # Provide the path to the cached JSON as an environment variable
-          env:
-            CYPRESS_PREV_RUN_JSON: ${{ steps.cache-previous-run.outputs.cache-hit != 'true' && 'undefined' || './previousRun.json' }}
+      # Run Cypress tests with enhanced script
+      - name: Run Cypress Tests
+        run: npm run cypress:run # Assuming you have 'cypress:run' defined
 
-      - name: Post Cypress run - update JSON cache if needed
-        if: steps.cypress-run.outcome == 'success'
+      # Update cache only if 'previousRun.json' has changed
+      - name: Update previousRun.json in cache
         uses: actions/cache@v3
+        if: ${{ hashFiles('previousRun.json') != '' }} # Check for changes
         with:
           path: ./previousRun.json
-          # If the Cypress test modified the JSON, the hash will change, updating the cache
-          key: ${{ runner.os }}-previousRun-${{ hashFiles('./previousRun.json') }}
+          key: ${{ runner.os }}-previous-run-${{ hashFiles('package-lock.json') }}
