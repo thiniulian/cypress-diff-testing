@@ -12,6 +12,6 @@ describe("cypress-diff-testing", () => {
 
   it("produces a new file", () => {
     const newList = ["https://google.com"];
-    cy.writeFile(CYPRESS_PREV_RUN_JSON, JSON.stringify(newList));
+    cy.writeFile(process.env.CYPRESS_PREV_RUN_JSON, JSON.stringify(newList));
   });
 });
