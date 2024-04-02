@@ -10,6 +10,15 @@ module.exports = defineConfig({
           return null;
         },
       });
+      on("task", {
+        readFileMaybe(filename) {
+          if (fs.existsSync(filename)) {
+            return fs.readFileSync(filename, "utf8");
+          }
+
+          return null;
+        },
+      });
     },
   },
 });
