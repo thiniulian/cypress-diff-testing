@@ -34,7 +34,7 @@ jobs:
       # Update cache only if 'previousRun.json' has changed
       - name: Update previousRun.json in cache
         uses: actions/cache@v3
-        if: ${{ hashFiles('previousRun.json') != '' }} # Check for changes
+        if: ${{ hashFiles('./previousRun.json') != '' }} # Check for changes
         with:
           path: ./previousRun.json
           key: ${{ runner.os }}-previous-run-${{ hashFiles('package-lock.json') }}
