@@ -1,0 +1,37 @@
+name: Cypress Tests with JSON Cache
+
+on: [push]
+
+jobs:
+  cypress-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache previous run JSON
+        id: cache-previous-run
+        uses: actions/cache@v3
+        with:
+          path: ./previousRun.json
+          key: ${{ runner.os }}-previousRun-${{ hashFiles('./previousRun.json') }}
+          restore-keys: |
+            ${{ runner.os }}-previousRun-
+
+      - name: Cypress run with cached JSON
+        uses: cypress-io/github-action@v4
+        with:
+          # Adjust the start and wait-on commands as needed for your project
+          start: npm start
+          wait-on: "http://localhost:3000"
+          # Provide the path to the cached JSON as an environment variable
+          env:
+            CYPRESS_PREV_RUN_JSON: ${{ steps.cache-previous-run.outputs.cache-hit != 'true' && 'undefined' || './previousRun.json' }}
+
+      - name: Post Cypress run - update JSON cache if needed
+        if: steps.cypress-run.outcome == 'success'
+        uses: actions/cache@v3
+        with:
+          path: ./previousRun.json
+          # If the Cypress test modified the JSON, the hash will change, updating the cache
+          key: ${{ runner.os }}-previousRun-${{ hashFiles('./previousRun.json') }}
