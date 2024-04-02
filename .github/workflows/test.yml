@@ -19,7 +19,7 @@ jobs:
 
       - name: Cypress run with cached JSON
         id: cypress-run
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
         with:
           # Adjust the start and wait-on commands as needed for your project
           start: npm start
