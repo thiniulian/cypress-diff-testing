@@ -28,7 +28,7 @@ jobs:
         env:
           CYPRESS_PREV_RUN_JSON: "${{github.workspace}}/previousRun.json"
 
-      - name: Save Primes
+      - name: Save this run JSON
         id: cache-previous-run-save
         uses: actions/cache/save@v4
         with:
