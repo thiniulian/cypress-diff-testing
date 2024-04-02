@@ -13,8 +13,8 @@ jobs:
         id: cache-previous-run
         uses: actions/cache@v3
         with:
-          path: ./previousRun.json
-          key: ${{ runner.os }}-previousRun-${{ hashFiles('./previousRun.json') }}
+          path: previousRun.json
+          key: ${{ runner.os }}-previousRun-${{ hashFiles('previousRun.json') }}
           restore-keys: |
             ${{ runner.os }}-previousRun-
 
@@ -27,7 +27,7 @@ jobs:
           wait-on: "http://localhost:3000"
           # Provide the path to the cached JSON as an environment variable
         env:
-          CYPRESS_PREV_RUN_JSON: "./previousRun.json"
+          CYPRESS_PREV_RUN_JSON: "previousRun.json"
 
       - name: Post Cypress run - update JSON cache if needed
         if: steps.cypress-run.outcome == 'success'
@@ -35,4 +35,4 @@ jobs:
         with:
           path: ./previousRun.json
           # If the Cypress test modified the JSON, the hash will change, updating the cache
-          key: ${{ runner.os }}-previousRun-${{ hashFiles('./previousRun.json') }}
+          key: ${{ runner.os }}-previousRun-${{ hashFiles('previousRun.json') }}
