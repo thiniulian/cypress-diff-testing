@@ -1,10 +1,10 @@
 describe("cypress-diff-testing", () => {
   const data = [];
   before(() => {
-    console.log(process.env.PREV_RUN_JSON);
+    console.log(process.env.CYPRESS_PREV_RUN_JSON);
 
-    if (process.env.PREV_RUN_JSON) {
-      cy.fixture(process.env.PREV_RUN_JSON).then((d) => {
+    if (process.env.CYPRESS_PREV_RUN_JSON) {
+      cy.fixture(process.env.CYPRESS_PREV_RUN_JSON).then((d) => {
         data = JSON.parse(d);
       });
     }
@@ -12,6 +12,6 @@ describe("cypress-diff-testing", () => {
 
   it("produces a new file", () => {
     const newList = ["https://google.com"];
-    cy.writeFile("./prev-run.json", JSON.stringify(newList));
+    cy.writeFile(CYPRESS_PREV_RUN_JSON, JSON.stringify(newList));
   });
 });

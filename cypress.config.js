@@ -6,7 +6,4 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
   },
-  env: {
-    PREV_RUN_JSON: "./prev-run.json",
-  },
 });

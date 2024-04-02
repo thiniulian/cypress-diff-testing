@@ -14,7 +14,7 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: |
-            ./previousRun.json
+            ${{github.workspace}}/previousRun.json
           key: ${{ runner.os }}-previousRun
 
       - name: Cypress run with cached JSON
@@ -26,12 +26,12 @@ jobs:
           wait-on: "http://localhost:3000"
           # Provide the path to the cached JSON as an environment variable
         env:
-          CYPRESS_PREV_RUN_JSON: "./previousRun.json"
+          CYPRESS_PREV_RUN_JSON: "${{github.workspace}}/previousRun.json"
 
       - name: Save Primes
         id: cache-previous-run-save
         uses: actions/cache/save@v4
         with:
           path: |
-            ./previousRun.json
+            ${{github.workspace}}/previousRun.json
           key: ${{ steps.cache-previous-run-restore.outputs.cache-primary-key }}
