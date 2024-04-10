@@ -1,9 +1,10 @@
 const http = require("http");
+const fs = require("fs");
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end("Hello, World!\n");
+  res.setHeader("Content-Type", "text/html");
+  res.end(fs.readFileSync("./index.html"));
 });
 
 server.listen(3000, "127.0.0.1", () => {

@@ -3,6 +3,7 @@ const fs = require("fs");
 
 module.exports = defineConfig({
   e2e: {
+    baseUrl: "https://bmjpublichealth.bmj.com",
     setupNodeEvents(on, config) {
       on("task", {
         log(message) {
